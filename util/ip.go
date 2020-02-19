@@ -1,4 +1,4 @@
-package internal
+package util
 
 import (
 	"cloud.google.com/go/compute/metadata"

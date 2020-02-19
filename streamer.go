@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/bigquery"
-	"github.com/gjbae1212/go-bqworker/internal"
+	"github.com/gjbae1212/go-bqworker/util"
 	"google.golang.org/api/option"
 )
 
@@ -154,7 +154,7 @@ func (st *streamer) createTable() error {
 					&bigquery.TableMetadata{Schema: schema.Meta.Schema}); err != nil {
 					return fmt.Errorf("[err] createTable %w", err)
 				} else {
-					fmt.Printf("[%s][bq-table][%s] create %s\n", internal.GetHostname(), internal.TimeToString(time.Now()), tableId)
+					fmt.Printf("[%s][bq-table][%s] create %s\n", util.GetHostname(), util.TimeToString(time.Now()), tableId)
 				}
 			}
 		}
@@ -167,11 +167,11 @@ func (st *streamer) getTableId(schema *TableSchema, t time.Time) string {
 	case NotExist:
 		return schema.Prefix
 	case Daily:
-		return schema.Prefix + internal.TimeToDailyStringFormat(t)
+		return schema.Prefix + util.TimeToDailyStringFormat(t)
 	case Monthly:
-		return schema.Prefix + internal.TimeToMonthlyStringFormat(t)
+		return schema.Prefix + util.TimeToMonthlyStringFormat(t)
 	case Yearly:
-		return schema.Prefix + internal.TimeToYearlyStringFormat(t)
+		return schema.Prefix + util.TimeToYearlyStringFormat(t)
 	}
 	return ""
 }

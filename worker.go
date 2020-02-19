@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/bigquery"
-	"github.com/gjbae1212/go-bqworker/internal"
+	"github.com/gjbae1212/go-bqworker/util"
 	"google.golang.org/api/option"
 )
 
@@ -25,7 +25,6 @@ type (
 		Data      Row
 	}
 
-	// dispatcher
 	WorkerDispatcher struct {
 		jobQueue   chan Job
 		workerPool chan chan Job
@@ -34,7 +33,6 @@ type (
 		errFunc    ErrorHandler
 	}
 
-	// worker
 	Worker struct {
 		id         int
 		client     *bigquery.Client
@@ -171,7 +169,7 @@ func (w *Worker) insertAll() []error {
 		w.jobs = w.jobs[:0]
 		if len(retries) > 0 {
 			fmt.Printf("[%s][bq-worker-%d][retry] job retry! %d \n",
-				internal.GetHostname(), w.id, len(retries))
+				util.GetHostname(), w.id, len(retries))
 			w.enqueue(retries...)
 		}
 	}()
@@ -230,7 +228,7 @@ func (w *Worker) insertAll() []error {
 	}
 
 	fmt.Printf("[%s][bq-worker-%d][%s] total %d insert %d fail %d retry %d \n",
-		internal.GetHostname(), w.id, internal.TimeToString(time.Now()),
+		util.GetHostname(), w.id, util.TimeToString(time.Now()),
 		total, total-fail-len(retries), fail, len(retries))
 	return errs
 }
